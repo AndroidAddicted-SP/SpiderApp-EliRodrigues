@@ -6,10 +6,9 @@ package com.challenge.spiderapp;
 public class Thumbnail {
 
     String path;
-    String extensions;
 
     @Override
     public String toString() {
-        return path + "/portrait_small." + extensions;
+        return path;
     }
 }

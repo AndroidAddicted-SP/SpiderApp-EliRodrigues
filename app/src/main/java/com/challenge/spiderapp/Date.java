@@ -5,6 +5,7 @@ package com.challenge.spiderapp;
  */
 public class Date {
 
+    String type;
     String date;
 
     @Override
@@ -13,4 +14,6 @@ public class Date {
                 "date='" + date + '\'' +
                 '}';
     }
+
+
 }

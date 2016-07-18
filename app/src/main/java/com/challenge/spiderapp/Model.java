@@ -5,7 +5,11 @@ package com.challenge.spiderapp;
  */
 public class Model {
 
-    String attributionTest;
+    String copyright;
     Data data;
 
+    @Override
+    public String toString() {
+        return "Dados providos por " + copyright;
+    }
 }

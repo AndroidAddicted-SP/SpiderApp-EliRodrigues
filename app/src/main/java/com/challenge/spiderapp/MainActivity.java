@@ -15,7 +15,10 @@ import android.widget.ProgressBar;
 
 import com.challenge.spiderapp.Utils.Utils;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private Long timeStamp;
     private String publicApiKey;
     private String privateApiKey;
+    private Comics comics;
+    private List<Comics> comicsList = new ArrayList<>();
 
     private boolean isRunning;
 
@@ -50,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         StringBuilder key = new StringBuilder();
         key.append(timeStamp);
-        key.append(privateApiKey); //private
-        key.append(publicApiKey); //public
+        key.append(privateApiKey);
+        key.append(publicApiKey);
 
        md5Hash = Utils.createMd5Hash(key.toString());
     }
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+        comics = new Comics();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initDownloadRetrofit() {
         isRunning = true;
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(MarvelApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         Map<String, String> data = new HashMap<>();
         data.put("ts", String.valueOf(timeStamp));
         data.put("hash", md5Hash);
-        data.put("apikey", "ea36b99d73d53acd825eb59d5a0b7231");
+        data.put("apikey", publicApiKey);
 
 
         Call<Model> call = service.getJsonComics(data);
@@ -107,16 +114,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Model> call, Response<Model> response) {
                 isRunning = false;
-
                 Log.e(TAG, " eliete response raw = " + response.raw());
                 if (response.isSuccessful()) {
+                    try {
+                        Comics.getComicListFromRetrofitJson(response);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    comicsList.addAll(Comics.getComicsList());
+//                        listAdapter.notifyDataSetChanged();
+                    Log.e(TAG, " eliete response list Comics = " + comicsList);
                     progressBar.setVisibility(View.GONE);
-                    Comics comics = new Comics();
-                    comics.setAttributionTest(response.body().attributionTest);
-                    comics.setResults(response.body().data.resultsList);
-
-                    Log.e(TAG, "eliete comics " + comics.toString());
-
                 }
             }
 
@@ -125,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Model> call, Throwable t) {
                 Log.e(TAG, "eliete retrofit response error");
             }
-        });
+        }) ;
 
     }
 
@@ -139,19 +147,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

@@ -6,6 +6,7 @@ package com.challenge.spiderapp;
 public class Price {
 
     String price;
+    String type;
 
     @Override
     public String toString() {
