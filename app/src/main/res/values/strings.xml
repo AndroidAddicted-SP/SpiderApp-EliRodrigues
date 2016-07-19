@@ -1,10 +1,25 @@
 <resources>
-    <string name="app_name">SpiderApp</string>
-    <string name="action_settings">Settings</string>
+
     <string name="marvel_pulic_key">ea36b99d73d53acd825eb59d5a0b7231</string>
+
+    <!--> Titles <-->
+    <string name="app_name">SpiderApp</string>
     <string name="home">Home</string>
     <string name="aboutme">About me</string>
+
+    <!--> Images <-->
     <string name="image_link">%s/portrait_xlarge.jpg</string>
+
+    <!--> Messages <-->
     <string name="error_msg">"Não foi possível buscar a lista de comics"</string>
 
+    <!--> About Me <-->
+    <string name="developed_by">Desenvolvido por Eliete Rodrigues</string>
+    <string name="linkedin">https://br.linkedin.com/in/eliete-da-silva-rodrigues-48546b15</string>
+    <string name="github">https://github.com/dsreliete</string>
+    <string name="gmail">dsreliete@gmail.com</string>
+    <string name="simbol_rights">®</string>
+    <string name="name_rights"> - versão</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
