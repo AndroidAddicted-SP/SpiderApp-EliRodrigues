@@ -1,53 +1,79 @@
 package com.challenge.spiderapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.challenge.spiderapp.Utils.Utils;
+
+import org.json.JSONException;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        Response.Listener<String>, Response.ErrorListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String BASE_URL = "http://gateway.marvel.com:80/v1/public/characters/1009610/comics";
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.navigation)
+    NavigationView navigationView;
+    @BindView(R.id.drawer)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.gridView)
+    GridView gridView;
 
     private String md5Hash;
     private Long timeStamp;
     private String publicApiKey;
     private String privateApiKey;
-    private Comics comics;
-    private List<Comics> comicsList = new ArrayList<>();
-
+    private List<Results> resultsList = new ArrayList<>();
     private boolean isRunning;
+    private ResultsGridAdapter comicsGridAdapter;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        comicsGridAdapter = new ResultsGridAdapter(this, resultsList);
+        gridView.setAdapter(comicsGridAdapter);
 
         timeStamp = Utils.getTimeStamp();
         publicApiKey = getResources().getString(R.string.marvel_pulic_key);
@@ -58,12 +84,7 @@ public class MainActivity extends AppCompatActivity {
         key.append(privateApiKey);
         key.append(publicApiKey);
 
-       md5Hash = Utils.createMd5Hash(key.toString());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        md5Hash = Utils.createMd5Hash(key.toString());
 
         if (MainActivity.hasConnection(this)) {
             if (!isRunning){
@@ -73,67 +94,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ButterKnife.bind(this);
-        comics = new Comics();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
-    }
-
     private void initDownloadRetrofit() {
         isRunning = true;
+        progressBar.setVisibility(View.VISIBLE);
+        String param = String.valueOf(timeStamp);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(MarvelApi.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        StringBuilder url = new StringBuilder();
+        url.append(BASE_URL);
+        url.append("?ts=");
+        url.append(param);
+        url.append("&apikey=");
+        url.append(publicApiKey);
+        url.append("&hash=");
+        url.append(md5Hash);
 
-        MarvelApi service = retrofit.create(MarvelApi.class);
-
-        Map<String, String> data = new HashMap<>();
-        data.put("ts", String.valueOf(timeStamp));
-        data.put("hash", md5Hash);
-        data.put("apikey", publicApiKey);
-
-
-        Call<Model> call = service.getJsonComics(data);
-        call.enqueue(new Callback<Model>() {
-            @Override
-            public void onResponse(Call<Model> call, Response<Model> response) {
-                isRunning = false;
-                Log.e(TAG, " eliete response raw = " + response.raw());
-                if (response.isSuccessful()) {
-                    try {
-                        Comics.getComicListFromRetrofitJson(response);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    comicsList.addAll(Comics.getComicsList());
-//                        listAdapter.notifyDataSetChanged();
-                    Log.e(TAG, " eliete response list Comics = " + comicsList);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<Model> call, Throwable t) {
-                Log.e(TAG, "eliete retrofit response error");
-            }
-        }) ;
+        RequestQueue queue = VolleySingleton.getInstance(this).getRequestQueue();
+        StringRequest request = new StringRequest(Request.Method.GET, url.toString(), this, this);
+        request.setRetryPolicy(VolleySingleton.getDefaultRetryPolicy());
+        queue.add(request);
 
     }
 
@@ -144,22 +122,82 @@ public class MainActivity extends AppCompatActivity {
         return networkInfo.isConnected();
     }
 
+    public void showSnackBar(String message) {
+        Snackbar.make(this.findViewById(android.R.id.content), message,
+                Snackbar.LENGTH_SHORT)
+                .setActionTextColor(Color.WHITE)
+                .show();
+    }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+    public boolean onNavigationItemSelected(MenuItem item) {
+        selectDrawerItem(item);
         return true;
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+
+        Intent intent = null;
+
+        switch(menuItem.getItemId()) {
+            case R.id.nav_home:
+                intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                break;
+            case R.id.nav_aboutme:
+
+                break;
+        }
+
+        if (intent != null)
+            startActivity(intent);
+
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        isRunning = false;
+        Log.e(TAG, "volley response error");
+        showSnackBar(getResources().getString(R.string.error_msg));
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResponse(String response) {
+        isRunning = true;
+        try {
+            Log.e(TAG, "eliete" + response);
+            Results.getResultsListFromJson(response);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException j) {
+            j.printStackTrace();
+        }
+        resultsList.addAll(Results.getResultsList());
+        comicsGridAdapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
+    }
 }

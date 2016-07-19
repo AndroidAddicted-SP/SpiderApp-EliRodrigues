@@ -2,4 +2,9 @@
     <string name="app_name">SpiderApp</string>
     <string name="action_settings">Settings</string>
     <string name="marvel_pulic_key">ea36b99d73d53acd825eb59d5a0b7231</string>
+    <string name="home">Home</string>
+    <string name="aboutme">About me</string>
+    <string name="image_link">%s/portrait_xlarge.jpg</string>
+    <string name="error_msg">"Não foi possível buscar a lista de comics"</string>
+
 </resources>
