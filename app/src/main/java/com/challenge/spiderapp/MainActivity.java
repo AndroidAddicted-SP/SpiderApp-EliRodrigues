@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             case R.id.nav_aboutme:
-
+                intent = new Intent(this, DetailActivity.class);
                 break;
         }
 
