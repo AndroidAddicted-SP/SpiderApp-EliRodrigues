@@ -1,4 +1,4 @@
-package com.challenge.spiderapp;
+package com.challenge.spiderapp.Comics;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.challenge.spiderapp.R;
+import com.challenge.spiderapp.data.Results;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,10 +45,10 @@ public class ResultsGridAdapter extends ArrayAdapter<Results> {
         }
 
         Results results = getItem(position);
-        holder.textView.setText(String.valueOf(results.issue));
+        holder.textView.setText(String.valueOf(results.getIssue()));
 
         Picasso.with(context)
-                .load(context.getResources().getString(R.string.image_link, results.path))
+                .load(context.getResources().getString(R.string.image_link, results.getPath()))
                 .placeholder(R.drawable.default_placeholder)
                 .into(holder.imageView);
 

@@ -1,4 +1,4 @@
-package com.challenge.spiderapp;
+package com.challenge.spiderapp.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;

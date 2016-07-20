@@ -1,4 +1,4 @@
-package com.challenge.spiderapp;
+package com.challenge.spiderapp.ComicsDetail;
 
 import android.support.v7.app.AppCompatActivity;
 

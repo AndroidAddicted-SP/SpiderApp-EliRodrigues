@@ -47,10 +47,10 @@
         android:layout_height="50dp"
         android:id="@+id/imageViewLinkedin"
         android:scaleType="fitXY"
-        android:src="@drawable/linkedIn"
-        android:layout_alignBottom="@+id/textViewLink"
-        android:layout_alignLeft="@+id/imageViewGithub"
-        android:layout_alignStart="@+id/imageViewGithub" />
+        android:src="@drawable/micr"
+        android:layout_below="@+id/textViewEmail"
+        android:layout_toLeftOf="@+id/textViewGit"
+        android:layout_toStartOf="@+id/textViewGit" />
 
     <TextView
         android:padding="16dp"
@@ -59,13 +59,13 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/linkedin"
         android:id="@+id/textViewLink"
+        android:autoLink="web"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/textViewEmail"
         android:layout_toRightOf="@+id/imageViewLinkedin"
         android:layout_toEndOf="@+id/imageViewLinkedin" />
 
     <ImageView
-        android:paddingTop=""
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/imageViewGithub"
@@ -84,6 +84,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/github"
         android:id="@+id/textViewGit"
+        android:autoLink="web"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/imageViewLinkedin"
         android:layout_toRightOf="@+id/imageViewGithub"
@@ -99,4 +100,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/textViewGit"
         android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

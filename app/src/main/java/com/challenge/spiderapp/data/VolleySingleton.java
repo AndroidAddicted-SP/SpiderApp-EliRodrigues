@@ -1,4 +1,4 @@
-package com.challenge.spiderapp;
+package com.challenge.spiderapp.data;
 
 import android.app.ActivityManager;
 import android.content.Context;

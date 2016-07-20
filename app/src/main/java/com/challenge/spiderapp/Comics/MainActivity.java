@@ -1,4 +1,4 @@
-package com.challenge.spiderapp;
+package com.challenge.spiderapp.Comics;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.challenge.spiderapp.AboutMe.AboutMeActivity;
+import com.challenge.spiderapp.BuildConfig;
+import com.challenge.spiderapp.R;
 import com.challenge.spiderapp.Utils.Utils;
+import com.challenge.spiderapp.data.Results;
+import com.challenge.spiderapp.data.VolleySingleton;
 
 import org.json.JSONException;
 
@@ -145,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             case R.id.nav_aboutme:
-                intent = new Intent(this, DetailActivity.class);
+                intent = new Intent(this, AboutMeActivity.class);
                 break;
         }
 
