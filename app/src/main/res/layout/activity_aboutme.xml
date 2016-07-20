@@ -6,7 +6,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="192dp"
         android:id="@+id/imageView"
         android:scaleType="fitXY"
         android:src="@drawable/spider" />
@@ -15,15 +15,16 @@
         android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/developed_by"
+        android:textStyle="bold"
         android:id="@+id/textView"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
         android:id="@+id/imageViewEmail"
         android:scaleType="fitXY"
         android:src="@drawable/gmail"
@@ -35,7 +36,7 @@
         android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/gmail"
         android:id="@+id/textViewEmail"
         android:layout_alignTop="@+id/imageViewEmail"
@@ -43,8 +44,8 @@
         android:layout_alignStart="@+id/textViewLink" />
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/imageViewLinkedin"
         android:scaleType="fitXY"
         android:src="@drawable/micr"
@@ -53,7 +54,7 @@
         android:layout_toStartOf="@+id/textViewGit" />
 
     <TextView
-        android:padding="16dp"
+        android:paddingLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -66,13 +67,11 @@
         android:layout_toEndOf="@+id/imageViewLinkedin" />
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/imageViewGithub"
         android:scaleType="fitXY"
         android:src="@drawable/git"
-        android:layout_marginLeft="38dp"
-        android:layout_marginStart="38dp"
         android:layout_alignBottom="@+id/textViewGit"
         android:layout_alignLeft="@+id/textView"
         android:layout_alignStart="@+id/textView" />
@@ -81,7 +80,7 @@
         android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/github"
         android:id="@+id/textViewGit"
         android:autoLink="web"

@@ -17,4 +17,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextView" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="TexTview.AllCaps" parent="TextView">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

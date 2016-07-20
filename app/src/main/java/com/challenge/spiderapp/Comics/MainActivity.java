@@ -102,6 +102,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initDownloadRetrofit() {
         isRunning = true;
         progressBar.setVisibility(View.VISIBLE);
+
+        String url = buildUrl();
+
+        RequestQueue queue = VolleySingleton.getInstance(this).getRequestQueue();
+        StringRequest request = new StringRequest(Request.Method.GET, url, this, this);
+        request.setRetryPolicy(VolleySingleton.getDefaultRetryPolicy());
+        queue.add(request);
+
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        isRunning = false;
+        Log.e(TAG, "volley response error");
+        showSnackBar(getResources().getString(R.string.error_msg));
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResponse(String response) {
+        isRunning = true;
+        try {
+            Log.e(TAG, "eliete" + response);
+            Results.getResultsListFromJson(response);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException j) {
+            j.printStackTrace();
+        }
+        resultsList.addAll(Results.getResultsList());
+        comicsGridAdapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
+    }
+
+    public String buildUrl(){
         String param = String.valueOf(timeStamp);
 
         StringBuilder url = new StringBuilder();
@@ -113,11 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         url.append("&hash=");
         url.append(md5Hash);
 
-        RequestQueue queue = VolleySingleton.getInstance(this).getRequestQueue();
-        StringRequest request = new StringRequest(Request.Method.GET, url.toString(), this, this);
-        request.setRetryPolicy(VolleySingleton.getDefaultRetryPolicy());
-        queue.add(request);
-
+        return url.toString();
     }
 
     public static boolean hasConnection(Context context) {
@@ -180,29 +211,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        isRunning = false;
-        Log.e(TAG, "volley response error");
-        showSnackBar(getResources().getString(R.string.error_msg));
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onResponse(String response) {
-        isRunning = true;
-        try {
-            Log.e(TAG, "eliete" + response);
-            Results.getResultsListFromJson(response);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (JSONException j) {
-            j.printStackTrace();
-        }
-        resultsList.addAll(Results.getResultsList());
-        comicsGridAdapter.notifyDataSetChanged();
-        progressBar.setVisibility(View.GONE);
     }
 }
