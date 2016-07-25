@@ -19,15 +19,13 @@
 
     <style name="TextView" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:paddingBottom">@dimen/text_padding</item>
+        <item name="android:paddingTop">@dimen/text_padding</item>
     </style>
 
     <style name="TexTview.AllCaps" parent="TextView">
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:background">@android:color/white</item>
     </style>
 
 </resources>
